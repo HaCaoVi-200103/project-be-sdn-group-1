@@ -1,9 +1,9 @@
-const express = require('express');
+import express, { Express } from "express";
 const route = express.Router();
 
 /* GET home page. */
 
-const initApiRoutes = (app) => {
+const initApiRoutes = (app: Express) => {
     route.get('/', (req, res) => {
         res.status(200);
         res.end("Project SDN GROUP 1")
@@ -12,4 +12,4 @@ const initApiRoutes = (app) => {
     return app.use('/api/v1', route);;
 }
 
-module.exports = initApiRoutes;
+export default initApiRoutes;
