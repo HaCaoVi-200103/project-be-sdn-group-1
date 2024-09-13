@@ -6,7 +6,7 @@ import createError from 'http-errors';
 import cookieParser from 'cookie-parser';
 import logger from 'morgan';
 import dotenv from 'dotenv';
-import initApiRoutes from '@routes/index';
+import initApiRoutes from './routes/index';
 dotenv.config();
 const hostName = process.env.HOST_NAME || 'localhost';
 const port = process.env.PORT || "8000";
