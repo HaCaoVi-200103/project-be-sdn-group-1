@@ -1,5 +1,3 @@
-
-
 import app from '../server';
 import debugModule from 'debug';
 import http from 'http';
