@@ -1,41 +1,42 @@
 
 
-import express, { Request, Response, NextFunction } from 'express';
+import express, { Request, NextFunction, Response } from 'express';
 import path from 'path';
 import createError from 'http-errors';
 import cookieParser from 'cookie-parser';
 import logger from 'morgan';
-import dotenv from 'dotenv';
+import 'dotenv/config';
 import initApiRoutes from './routes/index';
-dotenv.config();
-const hostName = process.env.HOST_NAME || 'localhost';
-const port = process.env.PORT || "8000";
+import connectionDB from './config/database';
 
 const app = express();
 
+//Setup Config
 app.use(logger('dev'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
+//Setup Routes
 initApiRoutes(app);
 
-app.listen(parseInt(port), hostName, () => {
-    console.log(`Example app listening on http://${hostName}:${port}/api/v1`);
-});
 
-app.use((next: NextFunction) => {
+//Handle Error
+app.use((req: Request, res: Response, next: NextFunction) => {
     next(createError(404));
 });
 app.use((err: any, req: Request, res: Response) => {
     // set locals, only providing error in development
     res.locals.message = err.message;
     res.locals.error = req.app.get('env') === 'development' ? err : {};
-
     // render the error page
     res.status(err.status || 500);
     res.render('error');
 });
+
+
+//Connect MongoDB
+connectionDB()
 
 export default app;

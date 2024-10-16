@@ -1,10 +1,10 @@
 import app from '../server';
 import debugModule from 'debug';
 import http from 'http';
-import dotenv from 'dotenv';
+import 'dotenv/config';
 import { AddressInfo } from 'net';
 
-dotenv.config();
+
 
 const debug = debugModule('myapp:server');
 
@@ -61,6 +61,7 @@ const onListening = () => {
 
 }
 
+const hostName = process.env.HOST_NAME || 'localhost';
 const port = normalizePort(process.env.PORT || "8000");
 app.set('port', port);
 
@@ -69,3 +70,4 @@ const server = http.createServer(app);
 server.listen(port);
 server.on('error', onError);
 server.on('listening', onListening);
+console.log(`App listening on http://${hostName}:${port}/api/v1`);
