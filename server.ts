@@ -7,6 +7,7 @@ import 'dotenv/config';
 import initApiRoutes from './routes/index';
 import connectionDB from './config/database';
 import session from "express-session"
+import uploadFileRoute from './routes/uploadFile';
 import ratingApiRoutes from './routes/ratingRoute';
 
 const app = express();
@@ -27,8 +28,12 @@ app.use(session({
 
 //Setup Routes
 initApiRoutes(app);
-ratingApiRoutes(app);
+uploadFileRoute(app)
+ratingApiRoutes(app)
 
+app.all("*", (req: Request, res: Response) => {
+    return res.status(200).send("API endpoint not found")
+})
 //Handle Error
 app.use((req: Request, res: Response, next: NextFunction) => {
     next(createError(404));
