@@ -7,7 +7,7 @@ const staffSchema = new Schema({
     phone_number: { type: String, required: true },
     email: { type: String, required: true },
     full_name: { type: String, required: true },
-    is_staff: { type: Boolean, default: false },
+    is_staff: { type: Boolean, default: true },
     staff_avatar: { type: String, required: true },
     address: { type: String, required: true }
 })
