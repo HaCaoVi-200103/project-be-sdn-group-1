@@ -5,7 +5,6 @@ const historyProductSchema = new Schema({
     create_date: { type: Date, default: Date.now },
     update_date: { type: Date, default: null },
     create_by: { type: String, required: true },
-    // update_by: { type: String, required: true },
     cake_id: { type: mongoose.Schema.Types.ObjectId, required: true, ref: "cakes" },
     staff_id: { type: mongoose.Schema.Types.ObjectId, required: true, ref: "staffs" },
     topping_id: { type: mongoose.Schema.Types.ObjectId, required: true, ref: "toppings" },

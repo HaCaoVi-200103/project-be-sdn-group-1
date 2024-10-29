@@ -5,7 +5,6 @@ const cateInOrderSchema = new Schema({
     cio_price: { type: Number, required: true, min: 0 },
     cake_id: { type: mongoose.Schema.Types.ObjectId, required: true, ref: "cakes" },
     order_id: { type: mongoose.Schema.Types.ObjectId, required: true, ref: "orders" },
-    tc_id: { type: mongoose.Schema.Types.ObjectId, required: true, ref: "toppingcakes" },
 })
 
 const CateInOrder = mongoose.model("cateinorders", cateInOrderSchema)

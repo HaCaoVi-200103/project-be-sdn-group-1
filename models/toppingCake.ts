@@ -4,7 +4,7 @@ const toppingCakeSchema = new Schema({
     tc_quantity: { type: Number, required: true, min: 0 },
     tc_price: { type: Number, required: true, min: 0 },
     topping_id: { type: mongoose.Schema.Types.ObjectId, required: true, ref: "toppings" },
-    cio_id: { type: mongoose.Schema.Types.ObjectId, required: true, ref: "cateinorders" },
+    cio_id: { type: mongoose.Schema.Types.ObjectId, required: true, ref: "cakeinorder" },
 })
 
 const ToppingCake = mongoose.model("toppingcakes", toppingCakeSchema)
