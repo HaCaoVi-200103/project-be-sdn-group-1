@@ -9,7 +9,7 @@ import 'dotenv/config';
 import initApiRoutes from './routes/index';
 import connectionDB from './config/database';
 import session from "express-session"
-
+import uploadFileRoute from './routes/uploadFile';
 
 const app = express();
 
@@ -29,7 +29,7 @@ app.use(session({
 
 //Setup Routes
 initApiRoutes(app);
-
+uploadFileRoute(app)
 //Handle Error
 app.use((req: Request, res: Response, next: NextFunction) => {
     next(createError(404));
