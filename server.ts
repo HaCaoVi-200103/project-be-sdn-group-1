@@ -9,7 +9,7 @@ import 'dotenv/config';
 import initApiRoutes from './routes/index';
 import connectionDB from './config/database';
 import session from "express-session"
-import Cake from './models/cake';
+
 
 const app = express();
 
