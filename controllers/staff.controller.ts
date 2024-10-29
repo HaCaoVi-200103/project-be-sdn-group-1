@@ -1,6 +1,7 @@
 import { Request, Response } from "express";
 import Staff from "../models/staff";
 import { checkStaffByEmail, checkStaffById } from "../utils";
+import { uploadFile } from "./uploadFile";
 
 export const getAllStaff = async (req: Request, res: Response) => {
     try {
@@ -55,6 +56,9 @@ export const updateStaff = async (req: Request, res: Response) => {
         if (!req.file) {
             return res.status(400).send("No file uploaded!!!")
         }
+
+        // const uploadResponse = await uploadFile(req, res, async () => { })
+
         const { staff_name, password, phone_number, email, full_name, address, } = req.body;
 
         if (!staff_name || !password || !phone_number || !email || !full_name || !address) {
