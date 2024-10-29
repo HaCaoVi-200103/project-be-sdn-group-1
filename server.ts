@@ -9,6 +9,7 @@ import 'dotenv/config';
 import initApiRoutes from './routes/index';
 import connectionDB from './config/database';
 import session from "express-session"
+import Cake from './models/cake';
 
 const app = express();
 
@@ -45,5 +46,12 @@ app.use((err: any, req: Request, res: Response) => {
 
 //Connect MongoDB
 connectionDB()
+
+const a = async () => {
+    console.log(await Cake.find());
+
+}
+
+a()
 
 export default app;
