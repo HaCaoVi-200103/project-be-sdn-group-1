@@ -1,5 +1,3 @@
-
-
 import express, { Request, NextFunction, Response } from 'express';
 import path from 'path';
 import createError from 'http-errors';
@@ -9,7 +7,7 @@ import 'dotenv/config';
 import initApiRoutes from './routes/index';
 import connectionDB from './config/database';
 import session from "express-session"
-
+import ratingApiRoutes from './routes/ratingRoute';
 
 const app = express();
 
@@ -29,6 +27,7 @@ app.use(session({
 
 //Setup Routes
 initApiRoutes(app);
+ratingApiRoutes(app);
 
 //Handle Error
 app.use((req: Request, res: Response, next: NextFunction) => {
@@ -42,7 +41,6 @@ app.use((err: any, req: Request, res: Response) => {
     res.status(err.status || 500);
     res.render('error');
 });
-
 
 //Connect MongoDB
 connectionDB()
