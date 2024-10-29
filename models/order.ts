@@ -6,7 +6,7 @@ const orderSchema = new Schema({
     was_paid: { type: Boolean, default: false },
     received_data: { type: Date, default: null },
     order_description: { type: String, default: "" },
-    user_id: { type: mongoose.Schema.Types.ObjectId, required: true, ref: "customers" },
+    cus_id: { type: mongoose.Schema.Types.ObjectId, required: true, ref: "customers" },
     staff_id: { type: mongoose.Schema.Types.ObjectId, required: true, ref: "staffs" },
 })
 
