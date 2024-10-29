@@ -8,6 +8,7 @@ import logger from 'morgan';
 import 'dotenv/config';
 import initApiRoutes from './routes/index';
 import connectionDB from './config/database';
+import session from "express-session"
 
 const app = express();
 
@@ -18,9 +19,15 @@ app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
+app.use(session({
+    secret: "!#!@$#%$#%#$%$#@#$@{#@!#!}{!@}{#}",
+    resave: false,
+    saveUninitialized: true,
+    cookie: { maxAge: 3 * 24 * 60 * 60 }
+}))
+
 //Setup Routes
 initApiRoutes(app);
-
 
 //Handle Error
 app.use((req: Request, res: Response, next: NextFunction) => {
