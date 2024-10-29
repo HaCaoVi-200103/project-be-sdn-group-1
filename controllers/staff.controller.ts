@@ -52,6 +52,31 @@ export const createStaff = async (req: Request, res: Response) => {
 
 export const updateStaff = async (req: Request, res: Response) => {
     try {
+        if (!req.file) {
+            return res.status(400).send("No file uploaded!!!")
+        }
+        const { staff_name, password, phone_number, email, full_name, address, } = req.body;
+
+        if (!staff_name || !password || !phone_number || !email || !full_name || !address) {
+            return res.status(400).send("Missing required field!!!")
+        }
+
+        const check = await checkStaffByEmail(email);
+        if (!check) {
+            return res.status(409).send("Email not found!!!")
+        }
+
+        await Staff.findByIdAndUpdate(check._id,
+            {
+                staff_name: staff_name,
+                password: password,
+                phone_number: phone_number,
+                email: email,
+                address: address,
+                full_name: full_name
+            });
+
+        return res.status(201).json("Update Success")
 
     } catch (error) {
         console.log("Create Staff Error: ", error);
