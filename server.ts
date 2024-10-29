@@ -47,11 +47,4 @@ app.use((err: any, req: Request, res: Response) => {
 //Connect MongoDB
 connectionDB()
 
-const a = async () => {
-    console.log(await Cake.find());
-
-}
-
-a()
-
 export default app;
