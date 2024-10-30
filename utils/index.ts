@@ -1,8 +1,6 @@
 import { Request, Response } from "express";
 import Cake from "../models/cake";
 import Customer from "../models/customer";
-import Staff from "../models/staff";
-import Rating from "../models/rating";
 
 export const checkCakeById = async (id: string) => {
     try {
@@ -23,55 +21,6 @@ export const checkUserById = async (id: string) => {
             return null
         }
         return user;
-    } catch (error) {
-        return null
-    }
-}
-
-export const checkStaffById = async (id: string) => {
-    try {
-        const user = await Staff.findById(id);
-        if (!user) {
-            return null
-        }
-        return user;
-    } catch (error) {
-        return null
-    }
-}
-
-export const checkStaffByEmail = async (email: string) => {
-    try {
-        const staff = await Staff.findOne({ email: email });
-        if (!staff) {
-            return null
-        }
-        return staff;
-    } catch (error) {
-        return null
-    }
-}
-
-
-export const checkRatingCake = async (cakeId: string, userId: string, ratingId: string) => {
-    try {
-        const rating = await Rating.findOne({ cake_id: cakeId, user_id: userId, _id: ratingId });
-        if (!rating) {
-            return null
-        }
-        return rating;
-    } catch (error) {
-        return null
-    }
-}
-
-export const checkRatingById = async (id: string) => {
-    try {
-        const rating = await Rating.findById(id);
-        if (!rating) {
-            return null
-        }
-        return rating;
     } catch (error) {
         return null
     }
