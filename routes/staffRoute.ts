@@ -3,7 +3,6 @@ import { createStaff, getAllStaff, getStaffById, updateStaff } from "../controll
 import multer from "multer";
 const route = express.Router();
 const upload = multer();
-/* GET home page. */
 
 const staffApiRoutes = (app: Express) => {
     route.get('/list-staff', getAllStaff);

@@ -2,8 +2,6 @@ import express, { Express } from "express";
 import { createRatingCake, deleteRatingById, getRatingByCakeId, getRatingById, updateRatingCake } from "../controllers/rating.controller";
 const route = express.Router();
 
-/* GET home page. */
-
 const ratingApiRoutes = (app: Express) => {
     route.get('/:ratingId', getRatingById);
     route.get('/list-rating/:cakeId', getRatingByCakeId);
