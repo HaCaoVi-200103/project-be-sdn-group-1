@@ -1,5 +1,5 @@
-import { genSalt, hash } from "bcrypt";
 import mongoose, { Schema } from "mongoose";
+import { genSalt, hash } from "bcrypt";
 
 const staffSchema = new Schema({
     staff_name: { type: String, required: true },
@@ -10,14 +10,14 @@ const staffSchema = new Schema({
     is_staff: { type: Boolean, default: true },
     staff_avatar: { type: String, required: true },
     address: { type: String, required: true }
-})
+});
 
 staffSchema.pre("save", async function (next) {
     const salt = await genSalt();
     this.password = await hash(this.password, salt);
     next();
-})
+});
 
-const Staff = mongoose.model("staffs", staffSchema)
+const Staff =  mongoose.model("staffs", staffSchema);
 
 export default Staff;

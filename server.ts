@@ -11,6 +11,7 @@ import connectionDB from './config/database';
 import session from "express-session"
 import uploadFileRoute from './routes/uploadFile';
 import ratingApiRoutes from './routes/ratingRoute';
+import orderRoute from './routes/orderRoute';
 
 const app = express();
 
@@ -32,6 +33,7 @@ app.use(session({
 initApiRoutes(app);
 uploadFileRoute(app)
 ratingApiRoutes(app)
+orderRoute(app)
 
 app.all("*", (req: Request, res: Response) => {
     return res.status(200).send("API endpoint not found")
