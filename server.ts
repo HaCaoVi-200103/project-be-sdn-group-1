@@ -11,6 +11,8 @@ import session from "express-session";
 import ratingApiRoutes from "./routes/ratingRoute";
 import cakeManagementRoute from "./routes/cakeManagementRoute";
 import staffApiRoutes from "./routes/staffRoute";
+import viewCakeManageRoute from "./routes/viewCakeManageRoute";
+import ToppingManagementRoute from "./routes/toppingManagementRoute";
 import authApiRoutes from "./routes/authRouter";
 
 const app = express();
@@ -37,8 +39,11 @@ initApiRoutes(app);
 ratingApiRoutes(app);
 cakeManagementRoute(app);
 staffApiRoutes(app);
+viewCakeManageRoute(app);
 app.use("/api/v1/", authApiRoutes)
 
+ToppingManagementRoute(app);
+app.use("/api/v1/", authApiRoutes);
 
 app.all("*", (req: Request, res: Response) => {
   return res.status(200).send("API endpoint not found");
@@ -55,8 +60,6 @@ app.use((err: any, req: Request, res: Response) => {
   res.status(err.status || 500);
   res.render("error");
 });
-
-
 
 //Connect MongoDB
 connectionDB();

@@ -1,7 +1,7 @@
 import Cake from "../models/cake";
 import Customer from "../models/customer";
-import Staff from "../models/staff";
 import Rating from "../models/rating";
+import Staff from "../models/staff";
 
 export const checkCakeById = async (id: string) => {
     try {

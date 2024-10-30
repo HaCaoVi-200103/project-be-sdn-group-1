@@ -23,7 +23,7 @@ export const createRatingCake = async (req: Request, res: Response) => {
             return res.status(404).json("Cake Id not found")
         }
 
-        const checkUser = await checkUserById(user_id);
+        const checkUser = checkUserById(user_id);
 
         if (!checkUser) {
             return res.status(404).json("User Id not found")
@@ -90,7 +90,7 @@ export const getRatingByCakeId = async (req: Request, res: Response) => {
             return res.status(400).json("Missing required params!!!")
         }
 
-        const checkCake = await checkCakeById(cakeId);
+        const checkCake = checkCakeById(cakeId);
 
         if (!checkCake) {
             return res.status(404).json("Cake Id not found")
