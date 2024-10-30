@@ -1,4 +1,3 @@
-import { Request, Response } from "express";
 import Cake from "../models/cake";
 import Customer from "../models/customer";
 import Staff from "../models/staff";
@@ -76,3 +75,25 @@ export const checkRatingById = async (id: string) => {
         return null
     }
 }
+
+export const checkUserDeleteRating = async (userId: string, ratingId: string) => {
+    try {
+        const rating = await Rating.findOne({ _id: ratingId, user_id: userId });
+        if (!rating) {
+            return null;
+        }
+        return rating;
+    } catch (error) {
+        return null
+    }
+}
+
+export const verifyEmail = (email: string) => {
+    const regex = /^[a-zA-Z0-9]+@gmail\.com$/;
+    return regex.test(email);
+};
+
+export const verifyPhoneNumber = (phone: string) => {
+    const regex = /^(0|\+84)(3[2-9]|5[6|8|9]|7[0|6-9]|8[1-5]|9[0-9])[0-9]{7}$/;
+    return regex.test(phone);
+};

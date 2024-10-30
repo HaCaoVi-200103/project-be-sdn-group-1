@@ -1,5 +1,5 @@
 import { Request, Response } from "express";
-import { checkCakeById, checkRatingById, checkRatingCake, checkUserById } from "../utils";
+import { checkCakeById, checkRatingById, checkRatingCake, checkUserById, checkUserDeleteRating } from "../utils";
 import Rating from "../models/rating";
 import mongoose from "mongoose";
 
@@ -63,10 +63,10 @@ export const updateRatingCake = async (req: Request, res: Response) => {
             return res.status(403).send("You do not have permission to edit!!!")
         }
 
-        await Rating.create({ cake_id: cakeId, rating_comment: rating_comment, rating_value: rating_value, user_id: user_id })
-        return res.status(200).send("Rating success")
+        await Rating.findByIdAndUpdate(ratingId, { cake_id: cakeId, rating_comment: rating_comment, rating_value: rating_value, user_id: user_id })
+        return res.status(200).send("Rating success");
     } catch (error) {
-        console.log("Create Cake Error: ", error);
+        console.log("Update Cake Error: ", error);
         return res.status(500).json("Internal Server Error")
     }
 }
@@ -105,7 +105,6 @@ export const getRatingById = async (req: Request, res: Response) => {
         if (!check) {
             return res.status(404).json("Rating Id not found")
         }
-
         return res.status(200).json(check)
     } catch (error) {
         console.log("Get Rating Cake Error: ", error);
@@ -125,6 +124,18 @@ export const deleteRatingById = async (req: Request, res: Response) => {
 
         if (!check) {
             return res.status(404).json("Rating Id not found")
+        }
+
+        const { user_id } = req.body
+
+        if (!user_id) {
+            return res.status(400).json("Missing required user id!!!")
+        }
+
+        const checkUserDelete = await checkUserDeleteRating(user_id, ratingId)
+
+        if (!checkUserDelete) {
+            return res.status(403).send("You do not have permission to delete!!!")
         }
 
         await Rating.findByIdAndDelete(ratingId)
