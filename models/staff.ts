@@ -8,8 +8,8 @@ const staffSchema = new Schema({
     email: { type: String, required: true },
     full_name: { type: String, required: true },
     is_staff: { type: Boolean, default: true },
-    staff_avatar: { type: String, default: "" },
-    address: { type: String, default: "" }
+    staff_avatar: { type: String, required: true },
+    address: { type: String, required: true }
 })
 
 staffSchema.pre("save", async function (next) {
