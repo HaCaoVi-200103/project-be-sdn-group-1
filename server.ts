@@ -11,7 +11,6 @@ import session from "express-session";
 import ratingApiRoutes from "./routes/ratingRoute";
 import cakeManagementRoute from "./routes/cakeManagementRoute";
 import staffApiRoutes from "./routes/staffRoute";
-import cartManagementRoute from "./routes/cartRoute";
 import viewCakeManageRoute from "./routes/viewCakeManageRoute";
 
 const app = express();
@@ -38,7 +37,6 @@ initApiRoutes(app);
 ratingApiRoutes(app);
 cakeManagementRoute(app);
 staffApiRoutes(app);
-cartManagementRoute(app);
 viewCakeManageRoute(app);
 
 
