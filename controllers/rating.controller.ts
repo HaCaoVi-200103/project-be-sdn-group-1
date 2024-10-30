@@ -1,5 +1,5 @@
 import { Request, Response } from "express";
-import { checkCakeById, checkRatingById, checkRatingCake, checkUserById, checkUserDeleteRating } from "../utils";
+import { checkCakeById, checkRatingById, checkRatingCake, checkUserById, checkUserDeleteRating, verifyRatingValue } from "../utils";
 import Rating from "../models/rating";
 import mongoose from "mongoose";
 
@@ -9,6 +9,12 @@ export const createRatingCake = async (req: Request, res: Response) => {
 
         if (!cakeId || !rating_value || !rating_comment || !user_id) {
             return res.status(400).json("Missing required field!!!")
+        }
+
+        const verifyRateValue = verifyRatingValue(rating_value)
+
+        if (!verifyRateValue) {
+            return res.status(400).send("Value rating must be integer and from 0 to 5")
         }
 
         const checkCake = await checkCakeById(cakeId);
@@ -43,6 +49,12 @@ export const updateRatingCake = async (req: Request, res: Response) => {
 
         if (!cakeId || !rating_value || !rating_comment || !user_id) {
             return res.status(400).json("Missing required field!!!")
+        }
+
+        const verifyRateValue = verifyRatingValue(rating_value)
+
+        if (!verifyRateValue) {
+            return res.status(400).send("Value rating must be integer and from 0 to 5")
         }
 
         const checkCake = await checkCakeById(cakeId);
