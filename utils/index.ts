@@ -1,6 +1,8 @@
 import Cake from "../models/cake";
 import Customer from "../models/customer";
 import Order from "../models/order";
+import Rating from "../models/rating";
+import Staff from "../models/staff";
 
 export const checkOrderById = async (id: string) => {
     try {
@@ -13,8 +15,7 @@ export const checkOrderById = async (id: string) => {
         console.log("aaa")
     }
 }
-import Rating from "../models/rating";
-import Staff from "../models/staff";
+
 
 export const checkCakeById = async (id: string) => {
     try {
