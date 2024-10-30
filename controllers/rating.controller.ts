@@ -51,4 +51,4 @@ export const getRatingByCakeId = async (req: Request, res: Response) => {
         console.log("Get Rating Cake Error: ", error);
         return res.status(500).json("Internal Server Error")
     }
-}   
+}

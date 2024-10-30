@@ -10,6 +10,7 @@ import session from "express-session";
 // import uploadFileRoute from './routes/uploadFile';
 import ratingApiRoutes from "./routes/ratingRoute";
 import cakeManagementRoute from "./routes/cakeManagementRoute";
+import viewCakeManageRoute from "./routes/viewCakeManageRoute";
 import ToppingManagementRoute from "./routes/toppingManagementRoute";
 import authApiRoutes from "./routes/authRouter";
 
@@ -36,6 +37,9 @@ initApiRoutes(app);
 // uploadFileRoute(app)
 ratingApiRoutes(app);
 cakeManagementRoute(app);
+viewCakeManageRoute(app);
+app.use("/api/v1/", authApiRoutes)
+
 ToppingManagementRoute(app);
 app.use("/api/v1/", authApiRoutes);
 
