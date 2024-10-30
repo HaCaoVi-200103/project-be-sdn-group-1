@@ -1,5 +1,6 @@
 import mongoose, { Schema } from "mongoose";
-import { genSalt, hash } from "bcrypt"
+import { genSalt, hash } from "bcrypt";
+
 const customerSchema = new Schema({
     user_name: { type: String, required: true },
     password: { type: String, required: true },
@@ -9,14 +10,14 @@ const customerSchema = new Schema({
     address: { type: String },
     user_avatar: { type: String },
     google_id: { type: String, default: null },
-})
+});
 
 customerSchema.pre("save", async function (next) {
     const salt = await genSalt();
     this.password = await hash(this.password, salt);
     next();
-})
+});
 
-const Customer = mongoose.model("customers", customerSchema)
+const Customer = mongoose.model("customers", customerSchema);
 
 export default Customer;
