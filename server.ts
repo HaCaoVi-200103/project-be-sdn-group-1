@@ -10,6 +10,7 @@ import session from "express-session";
 // import uploadFileRoute from './routes/uploadFile';
 import ratingApiRoutes from "./routes/ratingRoute";
 import cakeManagementRoute from "./routes/cakeManagementRoute";
+import ToppingManagementRoute from "./routes/toppingManagementRoute";
 
 const app = express();
 
@@ -34,6 +35,7 @@ initApiRoutes(app);
 // uploadFileRoute(app)
 ratingApiRoutes(app);
 cakeManagementRoute(app);
+ToppingManagementRoute(app);
 
 app.all("*", (req: Request, res: Response) => {
   return res.status(200).send("API endpoint not found");
