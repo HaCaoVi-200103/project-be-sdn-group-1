@@ -7,7 +7,6 @@ import "dotenv/config";
 import initApiRoutes from "./routes/index";
 import connectionDB from "./config/database";
 import session from "express-session";
-// import uploadFileRoute from './routes/uploadFile';
 import ratingApiRoutes from "./routes/ratingRoute";
 import cakeManagementRoute from "./routes/cakeManagementRoute";
 import orderRoute from "./routes/orderRoute";
@@ -36,7 +35,6 @@ app.use(
 
 //Setup Routes
 initApiRoutes(app);
-// uploadFileRoute(app)
 ratingApiRoutes(app);
 cakeManagementRoute(app);
 orderRoute(app)
