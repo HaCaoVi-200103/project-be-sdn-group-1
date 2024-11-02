@@ -14,6 +14,7 @@ import staffApiRoutes from "./routes/staffRoute";
 import viewCakeManageRoute from "./routes/viewCakeManageRoute";
 import ToppingManagementRoute from "./routes/toppingManagementRoute";
 import authApiRoutes from "./routes/authRouter";
+import profileApiRoutes from "./routes/profileRoute";
 
 const app = express();
 
@@ -40,10 +41,15 @@ cakeManagementRoute(app);
 orderRoute(app)
 staffApiRoutes(app);
 viewCakeManageRoute(app);
+profileApiRoutes(app)
 app.use("/api/v1/", authApiRoutes)
 
 ToppingManagementRoute(app);
 app.use("/api/v1/", authApiRoutes);
+
+
+
+
 
 app.all("*", (req: Request, res: Response) => {
   return res.status(200).send("API endpoint not found");
