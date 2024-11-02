@@ -1,12 +1,13 @@
 import express, { Express } from 'express';
-import { getCakesByType, getFirstCakeTypes, viewCakeDetail } from '../controllers/viewCakeManage.controllers';
+import { getAllCakes, getCakesByType, getFirstCakeTypes, viewCakeDetail } from '../controllers/viewCakeManage.controllers';
 
 const route = express.Router();
 const viewCakeManageRoute = (app: Express) => {
     route.get("/catalog", getCakesByType);
     route.get("/first-types", getFirstCakeTypes);
-    route.get("/details/:id", viewCakeDetail)
-    return app.use("/api/v1/cakes", route);
+    route.get("/all-cake", getAllCakes);
+    route.get("/details/:id", viewCakeDetail);
+    return app.use("/api/v1/CakeCatalog", route);
   };
 
 export default viewCakeManageRoute;
