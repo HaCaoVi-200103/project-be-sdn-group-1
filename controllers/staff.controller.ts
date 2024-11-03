@@ -72,17 +72,6 @@ export const updateStaff = async (req: Request, res: Response) => {
             return res.status(400).send("Missing required params!!!")
         }
 
-        if (!req.file) {
-            return res.status(400).send("No file uploaded!!!")
-        }
-
-        const uploadResponse = await uploadFile(req, res, async () => { }, "staffImages")
-
-        if (!uploadResponse && uploadResponse.status !== 200) {
-            res.status(500).send("Error uploading file.");
-        }
-        const { downloadURL } = uploadResponse.data;
-
         const { staff_name, password, phone_number, full_name, address, } = req.body;
 
         if (!staff_name || !password || !phone_number || !full_name || !address) {
@@ -94,6 +83,28 @@ export const updateStaff = async (req: Request, res: Response) => {
         if (!checkPhoneFormat) {
             return res.status(400).send("Phone number is not in correct format!!!")
         }
+
+        console.log(req.file);
+
+        if (!req.file) {
+            await Staff.findByIdAndUpdate(staffId,
+                {
+                    staff_name: staff_name,
+                    password: password,
+                    phone_number: phone_number,
+                    address: address,
+                    full_name: full_name,
+                });
+
+            return res.status(201).json("Update Success")
+        }
+
+        const uploadResponse = await uploadFile(req, res, async () => { }, "staffImages")
+
+        if (!uploadResponse && uploadResponse.status !== 200) {
+            res.status(500).send("Error uploading file.");
+        }
+        const { downloadURL } = uploadResponse.data;
 
         await Staff.findByIdAndUpdate(staffId,
             {
