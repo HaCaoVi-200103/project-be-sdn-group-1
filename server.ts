@@ -14,6 +14,7 @@ import staffApiRoutes from "./routes/staffRoute";
 import viewCakeManageRoute from "./routes/viewCakeManageRoute";
 import ToppingManagementRoute from "./routes/toppingManagementRoute";
 import authApiRoutes from "./routes/authRouter";
+import orderPaymentRoute from "./routes/payMangeRoute";
 
 const app = express();
 
@@ -40,6 +41,7 @@ cakeManagementRoute(app);
 orderRoute(app)
 staffApiRoutes(app);
 viewCakeManageRoute(app);
+orderPaymentRoute(app);
 app.use("/api/v1/", authApiRoutes)
 
 ToppingManagementRoute(app);
