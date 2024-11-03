@@ -1,6 +1,6 @@
 import mongoose, { Schema } from "mongoose";
 
-const cateInOrderSchema = new Schema({
+const cakeInOrderSchema = new Schema({
   cio_quantity: { type: Number, required: true, min: 0 },
   cio_price: { type: Number, required: true, min: 0 },
   cake_id: {
@@ -15,6 +15,6 @@ const cateInOrderSchema = new Schema({
   },
 });
 
-const CakeInOrder = mongoose.model("cakeinorders", cateInOrderSchema);
+const CakeInOrder = mongoose.model("cakeinorders", cakeInOrderSchema);
 
 export default CakeInOrder;
