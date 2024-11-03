@@ -8,7 +8,7 @@ const cakeSchema = new Schema({
   cake_price: { type: Number, required: true, min: 0 },
   cake_quantity: { type: Number, required: true, min: 0 },
   isDeleted: {
-    type: Number,
+    type: Boolean,
     default: false,
   },
 });

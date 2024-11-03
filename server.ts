@@ -16,6 +16,7 @@ import ToppingManagementRoute from "./routes/toppingManagementRoute";
 import authApiRoutes from "./routes/authRouter";
 import profileApiRoutes from "./routes/profileRoute";
 
+import orderPaymentRoute from "./routes/payMangeRoute";
 
 const app = express();
 
@@ -42,6 +43,7 @@ orderRoute(app)
 staffApiRoutes(app);
 viewCakeManageRoute(app);
 profileApiRoutes(app)
+orderPaymentRoute(app);
 app.use("/api/v1/", authApiRoutes)
 
 ToppingManagementRoute(app);

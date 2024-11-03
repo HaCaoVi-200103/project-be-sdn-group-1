@@ -31,7 +31,7 @@ export const getSomeToppings = async (req: Request, res: Response) => {
   }
 
   try {
-    const Toppings = await Topping.find()
+    const Toppings = await Topping.find({ isDeleted: 0 })
       .skip(start)
       .limit(end - start);
     return res.status(200).json(Toppings);
@@ -147,64 +147,45 @@ export const updateTopping = async (req: Request, res: Response) => {
   }
 };
 
-export const searchToppings = async (req: Request, res: Response) => {
+export const searchAndFilterToppings = async (req: Request, res: Response) => {
   const start = parseInt(req.body.start, 10);
   const end = parseInt(req.body.end, 10);
-  const toppingName = req.body.topping_name ? req.body.topping_name : "";
-
-  if (isNaN(start) || isNaN(end) || start < 0 || end <= start) {
-    return res.status(400).json({ error: "Invalid start or end values." });
-  }
-
-  try {
-    const query = toppingName
-      ? { topping_name: { $regex: toppingName, $options: "i" } }
-      : {};
-
-    const Toppings = await Topping.find(query)
-      .skip(start)
-      .limit(end - start);
-
-    return res.status(200).json(Toppings);
-  } catch (error) {
-    console.error("Error searching Toppings:", error);
-    return res.status(500).json({ error: "Internal Server Error" });
-  }
-};
-
-export const filterToppingsByPrice = async (req: Request, res: Response) => {
-  const start = parseInt(req.body.start, 10);
-  const end = parseInt(req.body.end, 10);
+  const toppingName = req.body.topping_name || "";
   let query: any = {};
 
+  query.isDeleted = { $lte: 0 };
+
   if (isNaN(start) || isNaN(end) || start < 0 || end <= start) {
     return res.status(400).json({ error: "Invalid start or end values." });
   }
 
   try {
-    const minPrice = parseFloat(req.body.min_price);
-    const maxPrice = parseFloat(req.body.max_price);
-
-    if (
-      isNaN(minPrice) ||
-      isNaN(maxPrice) ||
-      minPrice < 0 ||
-      maxPrice < minPrice
-    ) {
-      return res.status(400).json({ error: "Invalid price values." });
+    // Search by topping name if provided
+    if (toppingName) {
+      query.topping_name = { $regex: toppingName, $options: "i" };
     }
 
-    query = {
-      topping_price: { $gte: minPrice, $lte: maxPrice },
-    };
+    // Filter by price range if provided
+    const minPrice = parseFloat(req.body.min_price);
+    const maxPrice = parseFloat(req.body.max_price);
+    if (
+      !isNaN(minPrice) &&
+      !isNaN(maxPrice) &&
+      minPrice >= 0 &&
+      maxPrice >= minPrice
+    ) {
+      query.topping_price = { $gte: minPrice, $lte: maxPrice };
+    }
 
-    const Toppings = await Topping.find(query)
+    const toppings = await Topping.find(query)
       .skip(start)
       .limit(end - start);
 
-    return res.status(200).json(Toppings);
+    const totalToppings = await Topping.countDocuments(query);
+
+    return res.status(200).json({ totalToppings, toppings });
   } catch (error) {
-    console.error("Error filtering Toppings:", error);
+    console.error("Error searching and filtering toppings:", error);
     return res.status(500).json({ error: "Internal Server Error" });
   }
 };
