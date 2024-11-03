@@ -16,6 +16,7 @@ import ToppingManagementRoute from "./routes/toppingManagementRoute";
 import authApiRoutes from "./routes/authRouter";
 import profileApiRoutes from "./routes/profileRoute";
 
+
 const app = express();
 
 //Setup Config
@@ -24,7 +25,6 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, "public")));
-
 app.use(
   session({
     secret: "!#!@$#%$#%#$%$#@#$@{#@!#!}{!@}{#}",
@@ -46,9 +46,6 @@ app.use("/api/v1/", authApiRoutes)
 
 ToppingManagementRoute(app);
 app.use("/api/v1/", authApiRoutes);
-
-
-
 
 
 app.all("*", (req: Request, res: Response) => {
