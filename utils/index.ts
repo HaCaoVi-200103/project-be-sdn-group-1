@@ -3,6 +3,8 @@ import Customer from "../models/customer";
 import Order from "../models/order";
 import Rating from "../models/rating";
 import Staff from "../models/staff";
+import nodemailer from "nodemailer"
+import "dotenv/config"
 
 export const checkOrderById = async (id: string) => {
     try {
@@ -15,7 +17,6 @@ export const checkOrderById = async (id: string) => {
         console.log("aaa")
     }
 }
-
 
 export const checkCakeById = async (id: string) => {
     try {
@@ -64,7 +65,6 @@ export const checkStaffByEmail = async (email: string) => {
         return null
     }
 }
-
 
 export const checkRatingCake = async (cakeId: string, userId: string, ratingId: string) => {
     try {
@@ -116,3 +116,33 @@ export const verifyRatingValue = (rating: string | number) => {
     const ratingNumber = Number(rating);
     return !isNaN(ratingNumber) && ratingNumber >= 0 && ratingNumber <= 5;
 };
+
+export const generateRandomCode = () => {
+    return Math.floor(100000 + Math.random() * 900000).toString();
+}
+
+export const sendEmail = (to: string, subject: string, code: string) => {
+    const transporter = nodemailer.createTransport({
+        service: 'gmail',
+        auth: {
+            user: 'vihcce170371@fpt.edu.vn',
+            pass: process.env.KEY_GG
+        }
+    });
+
+    const mailOptions = {
+        from: 'vihcce170371@fpt.edu.vn',
+        to: to,
+        subject: subject,
+        text: code
+    };
+
+    transporter.sendMail(mailOptions, function (error, info) {
+        if (error) {
+            console.log("Send Email ERROR: ", error);
+        } else {
+            console.log('Email sent: ' + info.response);
+        }
+    });
+}
+
