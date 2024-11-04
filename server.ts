@@ -18,7 +18,6 @@ import profileApiRoutes from "./routes/profileRoute";
 import productHistoryRoutes from "./routes/productHistoryRoute";
 import storeRoute from "./routes/store.routes";
 
-
 import orderPaymentRoute from "./routes/payMangeRoute";
 
 const app = express();
@@ -48,8 +47,9 @@ viewCakeManageRoute(app);
 profileApiRoutes(app);
 orderPaymentRoute(app);
 storeRoute(app);
+productHistoryRoutes(app);
 
-app.use("/api/v1/", authApiRoutes)
+app.use("/api/v1/", authApiRoutes);
 
 ToppingManagementRoute(app);
 app.use("/api/v1/", authApiRoutes);

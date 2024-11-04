@@ -7,6 +7,18 @@ import { deleteFile } from "../config/FirebaseConfig";
 import { checkCakeById } from "../utils";
 import Order from "../models/order";
 import CakeInOrder from "../models/cakeInOrder";
+import HistoryProduct from "../models/historyProduct";
+
+import "express-session";
+
+declare module "express-session" {
+  interface SessionData {
+    user?: {
+      _id: string;
+      staff_name: string;
+    };
+  }
+}
 
 export const getCake = async (req: Request, res: Response) => {
   const { id } = req.params;
@@ -102,6 +114,22 @@ export const addCakes = async (
 
       await GoWith.insertMany(gowithRecords);
 
+      const staff_id = req.session.user!._id;
+      const staff_name = req.session.user!.staff_name;
+
+      const price = req.body.cake_price;
+      const quantity = req.body.cake_quantity;
+
+      const newHistory = await HistoryProduct.create({
+        create_date: new Date(),
+        update_date: null,
+        create_by: staff_name,
+        staff_id: staff_id,
+        cake_id: newCake._id,
+        his_price: price,
+        his_quantity: quantity,
+      });
+
       res
         .status(200)
         .json({ message: "Cake added successfully with toppings." });
@@ -171,7 +199,21 @@ export const updateCake = async (req: Request, res: Response) => {
       }
     }
     console.log(req.body);
+    const oldCake = await Cake.findByIdAndUpdate(id);
 
+    const oldQuantity = oldCake!.cake_quantity;
+    const oldPrice = oldCake!.cake_price;
+
+    let newQuantity = oldCake!.cake_quantity;
+    let newPrice = oldCake!.cake_price;
+
+    req.body.cake_quantity
+      ? (newQuantity = req.body.cake_quantity)
+      : oldCake!.cake_quantity;
+
+    req.body.cake_price
+      ? (newPrice = req.body.cake_price)
+      : oldCake!.cake_price;
     const updatedCake = await Cake.findByIdAndUpdate(
       id,
       { ...req.body, cake_image: updatedImageURL },
@@ -192,7 +234,19 @@ export const updateCake = async (req: Request, res: Response) => {
 
     await GoWith.insertMany(gowithRecords);
 
-    if (!updatedCake || !deleteAllGowith) {
+    const staff_id = req.session.user!._id;
+    const staff_name = req.session.user!.staff_name;
+
+    const newHistory = await HistoryProduct.create({
+      create_date: null,
+      update_date: new Date(),
+      create_by: staff_name,
+      staff_id: staff_id,
+      cake_id: id,
+      his_price: newPrice - oldPrice,
+      his_quantity: newQuantity - oldQuantity,
+    });
+    if (!updatedCake || !deleteAllGowith || !newHistory) {
       return res.status(500).json({ message: "Failed to update cake." });
     }
 

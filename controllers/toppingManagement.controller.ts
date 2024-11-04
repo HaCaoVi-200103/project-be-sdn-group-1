@@ -1,9 +1,9 @@
 import { NextFunction, Request, Response } from "express";
 import Topping from "../models/topping";
 import { uploadFile } from "./uploadFile";
-import GoWith from "../models/goWith";
 import mongoose from "mongoose";
 import { deleteFile } from "../config/FirebaseConfig";
+import HistoryProduct from "../models/historyProduct";
 
 export const getTopping = async (req: Request, res: Response) => {
   const { id } = req.params;
@@ -66,6 +66,23 @@ export const addToppings = async (
         ...req.body,
         topping_image: downloadURL,
       });
+
+      const staff_id = req.session.user!._id;
+      const staff_name = req.session.user!.staff_name;
+
+      const price = req.body.topping_price;
+      const quantity = req.body.topping_quantity;
+
+      const newHistory = await HistoryProduct.create({
+        create_date: new Date(),
+        update_date: null,
+        create_by: staff_name,
+        staff_id: staff_id,
+        topping_id: newTopping._id,
+        his_price: price,
+        his_quantity: quantity,
+      });
+
       res.status(200).json({ message: "Topping added successfully." });
     } else {
       res.status(500).json({ message: "Error uploading file." });
@@ -128,13 +145,42 @@ export const updateTopping = async (req: Request, res: Response) => {
       }
     }
 
+    const oldTopping = await Topping.findByIdAndUpdate(id);
+
+    const oldQuantity = oldTopping!.topping_quantity;
+    const oldPrice = oldTopping!.topping_price;
+
+    let newQuantity = oldTopping!.topping_quantity;
+    let newPrice = oldTopping!.topping_price;
+
+    req.body.Topping_quantity
+      ? (newQuantity = req.body.Topping_quantity)
+      : oldTopping!.topping_quantity;
+
+    req.body.Topping_price
+      ? (newPrice = req.body.Topping_price)
+      : oldTopping!.topping_price;
+
     const updatedTopping = await Topping.findByIdAndUpdate(
       id,
       { ...req.body, topping_image: updatedImageURL },
       { new: true }
     );
 
-    if (!updatedTopping) {
+    const staff_id = req.session.user!._id;
+    const staff_name = req.session.user!.staff_name;
+
+    const newHistory = await HistoryProduct.create({
+      create_date: null,
+      update_date: new Date(),
+      create_by: staff_name,
+      staff_id: staff_id,
+      topping_id: id,
+      his_price: newPrice - oldPrice,
+      his_quantity: newQuantity - oldQuantity,
+    });
+
+    if (!updatedTopping || !newHistory) {
       return res.status(500).json({ message: "Failed to update Topping." });
     }
 
