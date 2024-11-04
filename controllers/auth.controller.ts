@@ -24,8 +24,10 @@ export const user = async (req: any, res: any) => {
       if (!user) {
         return res.status(404).json({ message: "Customer not found" });
       }
-    } else if (role === "staff") {
+    } else if (role === "staff" || role === "manager") {
       user = await Staff.findById(userId).select("-password"); // Không lấy mật khẩu
+      console.log(user);
+
       if (!user) {
         return res.status(404).json({ message: "Staff not found" });
       }
