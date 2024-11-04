@@ -4,38 +4,38 @@ import jwt from "jsonwebtoken";
 const bcrypt = require("bcrypt");
 
 export const user = async (req: any, res: any) => {
-    const token = req.headers.authorization?.split(' ')[1]; // Lấy token từ header
+  const token = req.headers.authorization?.split(" ")[1]; // Lấy token từ header
 
-    if (!token) {
-        return res.status(401).json({ message: 'No token provided' });
+  if (!token) {
+    return res.status(401).json({ message: "No token provided" });
+  }
+
+  try {
+    // Giải mã token để lấy userId và role
+    const decoded: any = jwt.verify(token, process.env.JWT_KEY!);
+    const { userId, role } = decoded;
+
+    let user; // Biến để lưu thông tin người dùng
+
+    // Kiểm tra vai trò và lấy thông tin người dùng từ cơ sở dữ liệu
+    if (role === "customer") {
+      user = await Customer.findById(userId).select("-password"); // Không lấy mật khẩu
+      if (!user) {
+        return res.status(404).json({ message: "Customer not found" });
+      }
+    } else if (role === "staff") {
+      user = await Staff.findById(userId).select("-password"); // Không lấy mật khẩu
+      if (!user) {
+        return res.status(404).json({ message: "Staff not found" });
+      }
+    } else {
+      return res.status(403).json({ message: "Invalid role" });
     }
 
-    try {
-        // Giải mã token để lấy userId và role
-        const decoded: any = jwt.verify(token, process.env.JWT_KEY!);
-        const { userId, role } = decoded;
-
-        let user; // Biến để lưu thông tin người dùng
-
-        // Kiểm tra vai trò và lấy thông tin người dùng từ cơ sở dữ liệu
-        if (role === 'customer') {
-            user = await Customer.findById(userId).select('-password'); // Không lấy mật khẩu
-            if (!user) {
-                return res.status(404).json({ message: 'Customer not found' });
-            }
-        } else if (role === 'staff') {
-            user = await Staff.findById(userId).select('-password'); // Không lấy mật khẩu
-            if (!user) {
-                return res.status(404).json({ message: 'Staff not found' });
-            }
-        } else {
-            return res.status(403).json({ message: 'Invalid role' });
-        }
-
-        res.status(200).json(user);
-    } catch (error) {
-        res.status(500).json({ message: 'Failed to authenticate token', error });
-    }
+    res.status(200).json(user);
+  } catch (error) {
+    res.status(500).json({ message: "Failed to authenticate token", error });
+  }
 };
 
 // Register a new customer
@@ -84,7 +84,7 @@ export const register = async (req: any, res: any) => {
 // Login by google
 export const loginByGoogle = async (req: any, res: any) => {
   try {
-    const { user_name, email, full_name,password } = req.body;
+    const { user_name, email, full_name, password } = req.body;
 
     const user = await Customer.findOne({ email: email });
 
@@ -94,7 +94,7 @@ export const loginByGoogle = async (req: any, res: any) => {
           user_name,
           email,
           full_name,
-          password:password
+          password: password,
         });
         const savedCustomer = await newCustomer.save();
         console.log(savedCustomer);
@@ -165,6 +165,8 @@ export const login = async (req: any, res: any) => {
         );
 
         req.session.user = staff; // Store staff information in session
+        console.log(req.session.user._id);
+
         if (staff.is_staff)
           return res
             .status(200)
