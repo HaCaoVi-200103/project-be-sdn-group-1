@@ -2,6 +2,7 @@ import { Request, Response } from "express";
 import Staff from "../models/staff";
 import { checkStaffByEmail, checkStaffById, verifyEmail, verifyPhoneNumber } from "../utils";
 import { uploadFile } from "./uploadFile";
+import Order from "../models/order";
 
 export const getAllStaff = async (req: Request, res: Response) => {
     try {
@@ -122,4 +123,60 @@ export const updateStaff = async (req: Request, res: Response) => {
         console.log("Create Staff Error: ", error);
         return res.status(500).json("Internal Server Error")
     }
+}
+
+export const getMonthlyOrderStaff = async (req: Request, res: Response) => {
+    try {
+        const month = parseInt(req.body.month as string) || new Date().getMonth();
+        const year = parseInt(req.body.year as string) || new Date().getFullYear();
+        const orders = await Order.find({
+            status: { $ne: "Pending" },
+            order_date: {
+                $gte: new Date(year, month, 1),
+                $lt: new Date(year, month + 1, 1),
+            },
+        });
+        const data = []
+        const arrayStaff = [];
+        const listTotalPrice = calculateTotalPriceByStaff(orders)
+
+        for (const element of orders) {
+            const staff = await checkStaffById(element.staff_id + "");
+            const count = orders.filter(x => x.staff_id + "" === element.staff_id + "")
+            const checkStaff = arrayStaff.filter(x => x + "" === element.staff_id + "")
+            if (checkStaff.length === 0) {
+                console.log(listTotalPrice[element.staff_id + ""].toFixed(2));
+
+                const item = {
+                    staff_name: staff?.staff_name,
+                    total: listTotalPrice[element.staff_id + ""],
+                    total_accept: count.length
+                }
+
+                data.push(item)
+            }
+
+            arrayStaff.push(element.staff_id);
+        }
+
+        return res.json(data)
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ error: "Failed to get monthly sales data" });
+    }
+};
+
+function calculateTotalPriceByStaff(orders: any[]) {
+    return orders.reduce((acc, order) => {
+        const staffId = order.staff_id;
+        const totalPrice = order.total_price;
+
+        if (!acc[staffId]) {
+            acc[staffId] = 0;
+        }
+
+        acc[staffId] += totalPrice;
+
+        return acc;
+    }, {});
 }
