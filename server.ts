@@ -15,6 +15,8 @@ import viewCakeManageRoute from "./routes/viewCakeManageRoute";
 import ToppingManagementRoute from "./routes/toppingManagementRoute";
 import authApiRoutes from "./routes/authRouter";
 import profileApiRoutes from "./routes/profileRoute";
+import storeRoute from "./routes/store.routes";
+
 
 import orderPaymentRoute from "./routes/payMangeRoute";
 
@@ -44,6 +46,8 @@ staffApiRoutes(app);
 viewCakeManageRoute(app);
 profileApiRoutes(app)
 orderPaymentRoute(app);
+storeRoute(app);
+
 app.use("/api/v1/", authApiRoutes)
 
 ToppingManagementRoute(app);
