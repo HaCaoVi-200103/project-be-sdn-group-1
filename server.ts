@@ -16,6 +16,9 @@ import ToppingManagementRoute from "./routes/toppingManagementRoute";
 import authApiRoutes from "./routes/authRouter";
 import profileApiRoutes from "./routes/profileRoute";
 import productHistoryRoutes from "./routes/productHistoryRoute";
+import storeRoute from "./routes/store.routes";
+
+
 import orderPaymentRoute from "./routes/payMangeRoute";
 
 const app = express();
@@ -44,9 +47,9 @@ staffApiRoutes(app);
 viewCakeManageRoute(app);
 profileApiRoutes(app);
 orderPaymentRoute(app);
-productHistoryRoutes(app);
+storeRoute(app);
 
-app.use("/api/v1/", authApiRoutes);
+app.use("/api/v1/", authApiRoutes)
 
 ToppingManagementRoute(app);
 app.use("/api/v1/", authApiRoutes);

@@ -1,7 +1,7 @@
 import express from "express";
-import { login, register, registerStaff, loginStaff, user, loginByGoogle } from "../controllers/auth.controller"; // Customer authentication
+import { login, register, user, loginByGoogle } from "../controllers/auth.controller";
+import { isAuthenticated } from "../middleware/sessionMiddleware"; // Middleware kiểm tra phiên làm việc
 
-import { isAuthenticated } from "../middleware/sessionMiddleware";
 
 const route = express.Router();
 
@@ -11,26 +11,12 @@ route.post("/register", register);
 // Customer Login Route
 route.post("/login", login);
 
-// Staff Registration Route
-route.post("/staff/register", registerStaff);
-
-// Staff Login Route
-route.post("/staff/login", loginStaff);
-
 // Middleware để giải mã token và lấy thông tin người dùng
-route.get('/user', user);
-//Login By Google
+route.get('/user', isAuthenticated, user); // Bảo vệ route người dùng bằng isAuthenticated
+
+// Login By Google
 route.post("/loginByGoogle", loginByGoogle);
 
-// Protected Route
-route.get("/protected", isAuthenticated, (req, res) => {
-    res
-        .status(200)
-        .json({
-            message: "You have access to this protected route",
-            userId: req.session,
-        });
-});
 
 
 
