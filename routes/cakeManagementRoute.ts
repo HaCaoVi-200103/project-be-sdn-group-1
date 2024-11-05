@@ -10,6 +10,7 @@ import {
   updateCake,
 } from "../controllers/cakeManagement.controller";
 import multer from "multer";
+import { verifyAdmin, verifyStaff } from "../middleware/auth";
 
 const route = express.Router();
 const upload = multer();

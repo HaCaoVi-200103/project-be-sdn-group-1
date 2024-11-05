@@ -67,21 +67,21 @@ export const addToppings = async (
         topping_image: downloadURL,
       });
 
-      const staff_id = req.session.user!._id;
-      const staff_name = req.session.user!.staff_name;
+      // const staff_id = req.session.user!._id;
+      // const staff_name = req.session.user!.staff_name;
 
-      const price = req.body.topping_price;
-      const quantity = req.body.topping_quantity;
+      // const price = req.body.topping_price;
+      // const quantity = req.body.topping_quantity;
 
-      const newHistory = await HistoryProduct.create({
-        create_date: new Date(),
-        update_date: null,
-        create_by: staff_name,
-        staff_id: staff_id,
-        topping_id: newTopping._id,
-        his_price: price,
-        his_quantity: quantity,
-      });
+      // const newHistory = await HistoryProduct.create({
+      //   create_date: new Date(),
+      //   update_date: null,
+      //   create_by: staff_name,
+      //   staff_id: staff_id,
+      //   topping_id: newTopping._id,
+      //   his_price: price,
+      //   his_quantity: quantity,
+      // });
 
       res.status(200).json({ message: "Topping added successfully." });
     } else {
@@ -167,20 +167,20 @@ export const updateTopping = async (req: Request, res: Response) => {
       { new: true }
     );
 
-    const staff_id = req.session.user!._id;
-    const staff_name = req.session.user!.staff_name;
+    // const staff_id = req.session.user!._id;
+    // const staff_name = req.session.user!.staff_name;
 
-    const newHistory = await HistoryProduct.create({
-      create_date: null,
-      update_date: new Date(),
-      create_by: staff_name,
-      staff_id: staff_id,
-      topping_id: id,
-      his_price: newPrice - oldPrice,
-      his_quantity: newQuantity - oldQuantity,
-    });
+    // const newHistory = await HistoryProduct.create({
+    //   create_date: null,
+    //   update_date: new Date(),
+    //   create_by: staff_name,
+    //   staff_id: staff_id,
+    //   topping_id: id,
+    //   his_price: newPrice - oldPrice,
+    //   his_quantity: newQuantity - oldQuantity,
+    // });
 
-    if (!updatedTopping || !newHistory) {
+    if (!updatedTopping ) {
       return res.status(500).json({ message: "Failed to update Topping." });
     }
 

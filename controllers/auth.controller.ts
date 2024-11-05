@@ -8,7 +8,9 @@ export const user = async (req: any, res: any) => {
   const token = req.headers.authorization?.split(" ")[1]; // Lấy token từ header
 
   if (!token) {
-    return res.status(200).json({ message: "No token provided", statusCode: 401 });
+    return res
+      .status(200)
+      .json({ message: "No token provided", statusCode: 401 });
   }
 
   try {
@@ -87,17 +89,19 @@ export const register = async (req: any, res: any) => {
 // Login by google
 export const loginByGoogle = async (req: any, res: any) => {
   try {
-    const { user_name, email, full_name, password } = req.body;
+    const { user_name, email, full_name, user_avatar, google_id, password } =
+      req.body;
 
     const user = await Customer.findOne({ email: email });
-
     if (!user) {
       try {
         const newCustomer = new Customer({
           user_name,
           email,
           full_name,
-          password: password,
+          user_avatar,
+          google_id,
+          password,
         });
         const savedCustomer = await newCustomer.save();
         console.log(savedCustomer);
@@ -109,6 +113,7 @@ export const loginByGoogle = async (req: any, res: any) => {
         );
 
         req.session.user = savedCustomer;
+        console.log(token);
         return res
           .status(200)
           .json({ message: "Login successful", token, role: "customer" });
@@ -121,8 +126,8 @@ export const loginByGoogle = async (req: any, res: any) => {
         process.env.JWT_KEY!,
         { expiresIn: "1h" }
       );
-
       req.session.user = user;
+      console.log(req.session.user);
       return res
         .status(200)
         .json({ message: "Login successful", token, role: "customer" });
@@ -140,7 +145,9 @@ export const login = async (req: any, res: any) => {
     const user = await Customer.findOne({
       $or: [{ user_name }, { email }],
     });
-
+    if (user?.google_id) {
+      return res.status(200).json({ message: "Customer not Found", statusCode: 404  });
+    }
     if (!user) {
       try {
         const staff = await Staff.findOne({
@@ -148,7 +155,9 @@ export const login = async (req: any, res: any) => {
         });
 
         if (!staff) {
-          return res.status(200).json({ message: "Staff not found", statusCode: 404 });
+          return res
+            .status(200)
+            .json({ message: "Staff not found", statusCode: 404 });
         }
 
         // Verify password
@@ -157,7 +166,9 @@ export const login = async (req: any, res: any) => {
           staff.password
         );
         if (!isPasswordCorrect) {
-          return res.status(200).json({ message: "Invalid credentials", statusCode: 404 });
+          return res
+            .status(200)
+            .json({ message: "Login failed. Username or password is not correct.", statusCode: 404 });
         }
         if (staff.is_staff) {
           // Generate token
@@ -191,7 +202,9 @@ export const login = async (req: any, res: any) => {
 
     const isPasswordCorrect = await bcrypt.compare(password, user?.password);
     if (!isPasswordCorrect) {
-      return res.status(200).json({ message: "Invalid credentials", statusCode: 404 });
+      return res
+        .status(200)
+        .json({ message: "Invalid credentials", statusCode: 404 });
     }
 
     const token = jwt.sign(

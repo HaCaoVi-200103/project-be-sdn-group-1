@@ -114,21 +114,21 @@ export const addCakes = async (
 
       await GoWith.insertMany(gowithRecords);
 
-      const staff_id = req.session.user!._id;
-      const staff_name = req.session.user!.staff_name;
+      // const staff_id = req.session.user!._id;
+      // const staff_name = req.session.user!.staff_name;
 
-      const price = req.body.cake_price;
-      const quantity = req.body.cake_quantity;
+      // const price = req.body.cake_price;
+      // const quantity = req.body.cake_quantity;
 
-      const newHistory = await HistoryProduct.create({
-        create_date: new Date(),
-        update_date: null,
-        create_by: staff_name,
-        staff_id: staff_id,
-        cake_id: newCake._id,
-        his_price: price,
-        his_quantity: quantity,
-      });
+      // const newHistory = await HistoryProduct.create({
+      //   create_date: new Date(),
+      //   update_date: null,
+      //   create_by: staff_name,
+      //   staff_id: staff_id,
+      //   cake_id: newCake._id,
+      //   his_price: price,
+      //   his_quantity: quantity,
+      // });
 
       res
         .status(200)
@@ -233,20 +233,21 @@ export const updateCake = async (req: Request, res: Response) => {
     }));
 
     await GoWith.insertMany(gowithRecords);
+    const staff_id =req.body.userId ;
+    // const staff_id = req.session.user!._id;
 
-    const staff_id = req.session.user!._id;
-    const staff_name = req.session.user!.staff_name;
+    // const staff_name = req.session.user!.staff_name;
 
-    const newHistory = await HistoryProduct.create({
-      create_date: null,
-      update_date: new Date(),
-      create_by: staff_name,
-      staff_id: staff_id,
-      cake_id: id,
-      his_price: newPrice - oldPrice,
-      his_quantity: newQuantity - oldQuantity,
-    });
-    if (!updatedCake || !deleteAllGowith || !newHistory) {
+    // const newHistory = await HistoryProduct.create({
+    //   create_date: null,
+    //   update_date: new Date(),
+    //   create_by: "",
+    //   staff_id: staff_id,
+    //   cake_id: id,
+    //   his_price: newPrice - oldPrice,
+    //   his_quantity: newQuantity - oldQuantity,
+    // });
+    if (!updatedCake || !deleteAllGowith ) {
       return res.status(500).json({ message: "Failed to update cake." });
     }
 
