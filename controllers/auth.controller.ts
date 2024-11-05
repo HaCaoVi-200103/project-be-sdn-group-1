@@ -8,7 +8,7 @@ export const user = async (req: any, res: any) => {
   const token = req.headers.authorization?.split(" ")[1]; // Lấy token từ header
 
   if (!token) {
-    return res.status(401).json({ message: "No token provided" });
+    return res.status(200).json({ message: "No token provided", statusCode: 401 });
   }
 
   try {
@@ -148,7 +148,7 @@ export const login = async (req: any, res: any) => {
         });
 
         if (!staff) {
-          return res.status(404).json({ message: "Staff not found" });
+          return res.status(200).json({ message: "Staff not found", statusCode: 404 });
         }
 
         // Verify password
@@ -157,7 +157,7 @@ export const login = async (req: any, res: any) => {
           staff.password
         );
         if (!isPasswordCorrect) {
-          return res.status(401).json({ message: "Invalid credentials" });
+          return res.status(200).json({ message: "Invalid credentials", statusCode: 404 });
         }
         if (staff.is_staff) {
           // Generate token
@@ -191,7 +191,7 @@ export const login = async (req: any, res: any) => {
 
     const isPasswordCorrect = await bcrypt.compare(password, user?.password);
     if (!isPasswordCorrect) {
-      return res.status(401).json({ message: "Invalid credentials" });
+      return res.status(200).json({ message: "Invalid credentials", statusCode: 404 });
     }
 
     const token = jwt.sign(
