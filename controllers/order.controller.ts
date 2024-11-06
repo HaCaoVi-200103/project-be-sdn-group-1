@@ -463,3 +463,17 @@ export const createOrder = async (req: Request, res: Response) => {
     return res.status(500).json("Internal Server Error");
   }
 }
+
+export const paymentWithQR = async (req: Request, res: Response) => {
+  try {
+    const { total, was_paid, description, cusId } = req.body;
+    if (!total || was_paid !== null || !description || !cusId) {
+      return res.status(200).json({ message: "Missing required field!!!", statusCode: 400 })
+    }
+
+
+  } catch (error) {
+    console.log(error);
+    return res.status(500).json("Internal Server Error");
+  }
+} 
