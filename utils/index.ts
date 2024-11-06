@@ -146,3 +146,40 @@ export const sendEmail = (to: string, subject: string, code: string) => {
     });
 }
 
+export const checkCustomerByEmail = async (email: string) => {
+    try {
+        const res = await Customer.findOne({ email: email });
+        if (!res) {
+            return false;
+        }
+
+        return res
+    } catch (error) {
+        return false;
+    }
+}
+
+export const checkSaffByEmail = async (email: string) => {
+    try {
+        const res = await Customer.findOne({ email: email });
+        if (!res) {
+            return false;
+        }
+        return res;
+    } catch (error) {
+        return false;
+    }
+}
+
+export const updatePasswordStaff = async (email: string, password: string) => {
+    try {
+        const result = await Staff.findOneAndUpdate({ email: email }, { password: password })
+        if (!result) {
+            return false;
+        }
+
+        return true
+    } catch (error) {
+        return false;
+    }
+}
