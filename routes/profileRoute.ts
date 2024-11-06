@@ -1,5 +1,5 @@
 import express, { Express } from "express";
-import { changePassword, getProfileById, postSendEmail, updateProfileCustomer, updateProfileStaff, verifyPassword } from "../controllers/profile.controller";
+import { changePassword, checkEmail, fogotPassword, getProfileById, postSendEmail, updateProfileCustomer, updateProfileStaff, verifyPassword } from "../controllers/profile.controller";
 import multer from "multer";
 
 const route = express.Router();
@@ -11,7 +11,8 @@ const profileApiRoutes = (app: Express) => {
     route.post("/change-password", changePassword);
     route.post("/check-password", verifyPassword)
     route.put("/update-staff/:id", upload.single("file"), updateProfileStaff)
-
+    route.post("/forgot-password", fogotPassword);
+    route.post("/check-email", checkEmail);
     return app.use('/api/v1/profile', route)
 }
 

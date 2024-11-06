@@ -1,7 +1,7 @@
 import { Request, Response } from "express";
 import Customer from "../models/customer";
 import { uploadFile } from "./uploadFile";
-import { checkStaffById, checkUserById, generateRandomCode, sendEmail, verifyEmail, verifyPhoneNumber } from "../utils";
+import { checkCustomerByEmail, checkSaffByEmail, checkStaffByEmail, checkStaffById, checkUserById, generateRandomCode, sendEmail, updatePasswordStaff, verifyEmail, verifyPhoneNumber } from "../utils";
 import { compare, genSalt, hash } from "bcrypt";
 import Staff from "../models/staff";
 
@@ -76,21 +76,9 @@ export const updateProfileCustomer = async (req: Request, res: Response) => {
 
 export const postSendEmail = async (req: Request, res: Response) => {
     try {
-        const { id } = req.body
-        if (!id) {
+        const { email } = req.body
+        if (!email) {
             return res.status(400).send("Missing required field!!!")
-        }
-
-        const getEmail = await checkUserById(id)
-        if (!getEmail) {
-            return res.status(404).send("Email not found")
-        }
-
-        const email = getEmail.email
-        const checkEmailFormat = verifyEmail(email);
-
-        if (!checkEmailFormat) {
-            return res.status(400).send("Email is not in correct format. Must be example@gmail.com!!!")
         }
 
         const to = email;
@@ -215,6 +203,73 @@ export const updateProfileStaff = async (req: Request, res: Response) => {
 
         return res.status(201).json("Update Success")
 
+    } catch (error) {
+        console.log(error);
+        return res.status(500).send("Internal Server Error")
+    }
+}
+
+
+export const fogotPassword = async (req: Request, res: Response) => {
+    try {
+        const { email, password } = req.body;
+        if (!email || !password) {
+            return res.status(400).send("Missing required field!!!")
+        }
+
+        const salt = await genSalt();
+
+        const hashPass = await hash(password, salt)
+
+        const customer = await checkCustomerByEmail(email);
+
+        if (!customer) {
+            const staff = await checkSaffByEmail(email)
+            if (!staff) {
+                const result = await updatePasswordStaff(email, hashPass)
+
+                if (!result) {
+                    throw new Error("UPDATE PASSWORD STAFF IS FAIL")
+                }
+                return res.status(200).json({ message: "UPDATE PASSWORD SUSSESSFULL" })
+            }
+        }
+
+        await Customer.findOneAndUpdate({ email: email }, { password: hashPass })
+
+
+        return res.status(201).json({ message: "Update Successfully" })
+    } catch (error) {
+        console.log(error);
+        return res.status(500).send("Internal Server Error")
+    }
+}
+
+
+export const checkEmail = async (req: Request, res: Response) => {
+    try {
+        const { email } = req.body;
+        if (!email) {
+            return res.status(400).send("Miissing required field!!!")
+        }
+
+        const checkEmailFormat = verifyEmail(email);
+
+        if (!checkEmailFormat) {
+            return res.status(200).json({ message: "Email is not in correct format. Must be example@gmail.com!!!", statusCode: 400 })
+        }
+
+        const customer = await checkCustomerByEmail(email);
+        if (!customer) {
+            const staff = await checkStaffByEmail(email);
+            if (!staff) {
+                return res.status(200).json({ message: "Not found email in system", statusCode: 404 })
+            }
+            return res.status(200).json({ message: "Email already exist", statusCode: 200 })
+
+        }
+
+        return res.status(200).json({ message: "Email already exist", statusCode: 200 })
     } catch (error) {
         console.log(error);
         return res.status(500).send("Internal Server Error")
