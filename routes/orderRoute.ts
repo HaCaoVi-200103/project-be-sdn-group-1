@@ -14,26 +14,22 @@ import {
     createOrder,
     getTopping,
 } from "../controllers/order.controller";
+import { verifyStaff } from "../middleware/auth";
 
 const route = express.Router();
 
 const orderRoute = (app: Express) => {
-
-    route.get("/get-list", getTopping)
-    route.post("/create-order", createOrder)
-
-
-    route.post("/confirmedOrder", getConfirmedOrder);
-    route.post("/unConfirmedOrder", getUnconfirmedOrder);
-    route.put("/wasPaidOrder", wasPaidOrder);
-    route.post("/allOrder", getAllOrder);
-    route.put("/status", changeStatus);
-    route.post("/search", searchOrder);
-    route.post("/filter", filterOrder);
-    route.put("/acceptOrder", acceptOrder);
-    route.get("/getAvailableWeeks", getAvailableWeeks);
-    route.post("/getOrderByWeek", getOrderByWeek);
-    route.get("/:id", getOrderByID);
+    route.post("/confirmedOrder", verifyStaff, getConfirmedOrder);
+    route.post("/unConfirmedOrder", verifyStaff, getUnconfirmedOrder);
+    route.put("/wasPaidOrder", verifyStaff, wasPaidOrder);
+    route.post("/allOrder", verifyStaff, getAllOrder);
+    route.put("/status", verifyStaff, changeStatus);
+    route.post("/search", verifyStaff, searchOrder);
+    route.post("/filter", verifyStaff, filterOrder);
+    route.put("/acceptOrder", verifyStaff, acceptOrder);
+    route.get("/getAvailableWeeks", verifyStaff, getAvailableWeeks);
+    route.post("/getOrderByWeek", verifyStaff, getOrderByWeek);
+    route.get("/:id", verifyStaff, getOrderByID);
 
     return app.use("/api/v1/orders", route);
 };

@@ -12,7 +12,6 @@ import {
   getYear,
   eachDayOfInterval,
 } from "date-fns";
-const staff_id_ex = "6720a5c3588e2bd477bfd1c4";
 
 // input: order_id
 // output: add staff_id vào order
@@ -25,7 +24,7 @@ export const acceptOrder = async (req: Request, res: Response) => {
 
     const updateResult = await Order.updateOne(
       { _id: req.body.order_id, staff_id: null },
-      { staff_id: staff_id_ex }
+      { staff_id: req.body.userId }
     );
 
     if (updateResult.modifiedCount === 0) {
@@ -71,7 +70,7 @@ export const filterOrder = async (req: Request, res: Response) => {
       orderQuery.was_paid = wasPaid;
     }
     if (flag === "confirmed") {
-      orderQuery.staff_id = staff_id_ex;
+      orderQuery.staff_id = req.body.userId;
     } else if (flag === "unconfirmed") {
       orderQuery.staff_id = null;
     } else if (flag !== "all") {
@@ -118,7 +117,7 @@ export const searchOrder = async (req: Request, res: Response) => {
     if (flag === "all") {
       orderQuery = {};
     } else if (flag === "confirmed") {
-      orderQuery = { staff_id: staff_id_ex };
+      orderQuery = { staff_id: req.body.userId };
     } else if (flag === "unconfirmed") {
       orderQuery = { staff_id: null };
     } else {
@@ -285,8 +284,8 @@ export const getConfirmedOrder = async (req: Request, res: Response) => {
     ) {
       return res.status(400).json({ message: "Invalid pagination values" });
     }
-    const totalCount = await Order.countDocuments({ staff_id: staff_id_ex });
-    const orders = await Order.find({ staff_id: staff_id_ex })
+    const totalCount = await Order.countDocuments({ staff_id: req.body.userId });
+    const orders = await Order.find({ staff_id: req.body.userId })
       .populate("cus_id")
       .populate("staff_id")
       .skip(start - 1)
