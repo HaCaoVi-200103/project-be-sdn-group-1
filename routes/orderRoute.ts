@@ -11,11 +11,18 @@ import {
     getOrderByID,
     getAvailableWeeks,
     getOrderByWeek,
+    createOrder,
+    getTopping,
 } from "../controllers/order.controller";
 
 const route = express.Router();
 
 const orderRoute = (app: Express) => {
+
+    route.get("/get-list", getTopping)
+    route.post("/create-order", createOrder)
+
+
     route.post("/confirmedOrder", getConfirmedOrder);
     route.post("/unConfirmedOrder", getUnconfirmedOrder);
     route.put("/wasPaidOrder", wasPaidOrder);
