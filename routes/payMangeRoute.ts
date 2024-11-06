@@ -7,7 +7,7 @@ const orderPaymentRoute = (app: Express) => {
     route.post('/pay-by-cash', createOrderCashPayment);
     route.post('/pay-by-qr', createOrderQRPayment);
 
-    return app.use('/api/v1/orders', route);
+    return app.use('/api/v1/payment', route);
 }
 
 export default orderPaymentRoute;

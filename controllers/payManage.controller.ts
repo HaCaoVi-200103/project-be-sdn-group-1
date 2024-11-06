@@ -5,52 +5,33 @@ import Order from "../models/order";
 
 export const createOrderCashPayment = async (req: Request, res: Response) => {
   try {
-    const { cus_id, total_price, order_description, staff_id } = req.body;
-    if (!cus_id || !total_price) {
-      return res.status(400).json("Failed!");
+    const { total, was_paid, description, cusId } = req.body;
+
+    if (!total || !description || !cusId) {
+      return res.status(200).json({ message: "Missing required field!!!", statusCode: 400 })
     }
 
-    const newOrder = await Order.create({
-      cus_id,
-      total_price,
-      order_description,
-      staff_id,
-      status: "Success", 
-      was_paid: true,
-    });
-
-    return res.status(201).json({ message: "Create order successful!", order: newOrder });
+    await Order.create({ total_price: total, cus_id: cusId, order_description: description, was_paid: was_paid ? was_paid : false })
+    return res.status(200).json({ message: "Order Successfull", statusCode: 200 })
   } catch (error) {
-    console.log("Lỗi tạo đơn hàng thanh toán tiền mặt: ", error);
-    return res.status(500).json("Lỗi hệ thống");
+    console.log(error);
+    return res.status(500).json("Internal Server Error");
   }
-};
+}
 
 
 export const createOrderQRPayment = async (req: Request, res: Response) => {
   try {
-    const { cus_id, total_price, order_description, staff_id } = req.body;
-
-    if (!cus_id || !total_price) {
-      return res.status(400).json("Thiếu trường bắt buộc!");
+    const { total, was_paid, description, cusId } = req.body;
+    if (!total || was_paid === null || !description || !cusId) {
+      return res.status(200).json({ message: "Missing required field!!!", statusCode: 400 })
     }
+    const order = await Order.create({ total_price: total, cus_id: cusId, order_description: description, was_paid: was_paid ? was_paid : false })
 
-    const newOrder = await Order.create({
-      cus_id,
-      total_price,
-      order_description,
-      staff_id,
-      status: "Waiting for payment",
-      was_paid: false, 
-    });
-
-    return res.status(201).json({
-      message: "Payment by QR code",
-      orderId: newOrder._id,
-      totalAmount: newOrder.total_price,
-    });
+    const QR = `https://img.vietqr.io/image/sacombank-0907626222-compact2.png?amount=${total}&addInfo=${order._id}&accountName=HA CAO VI`
+    return res.status(200).json({ QR: QR })
   } catch (error) {
-    console.log("Error creating payment order by QR: ", error);
-    return res.status(500).json("Error system!");
+    console.log(error);
+    return res.status(500).json("Internal Server Error");
   }
-};
+} 
